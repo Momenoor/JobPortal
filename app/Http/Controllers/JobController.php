@@ -6,6 +6,7 @@ use App\Enums\JobStatus;
 use App\Enums\WorkingTime;
 use App\Mail\JobNotificationEmail;
 use App\Models\Category;
+use App\Models\Company;
 use App\Models\Job;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +20,11 @@ class JobController extends Controller
     // List all jobs
     public function index()
     {
-        $jobs = Job::withCount('jobApplications')->paginate(10);
+        $job = Job::query();
+        if(auth()->user()->isEmployer()){
+            $job->whereIn('company_id',auth()->user()->companies()->pluck('id')->toArray());
+        }
+        $jobs = $job->withCount('jobApplications')->paginate(10);
         return view('jobs.list', compact('jobs'));
     }
 
@@ -27,7 +32,7 @@ class JobController extends Controller
     public function create()
     {
         $categories = Category::all();
-        $companies = auth()->user()->companies;
+        $companies = Company::getCompanies();
         $jobTypes = (WorkingTime::getValues());
         return view('jobs.create', compact('categories', 'companies', 'jobTypes'));
     }
@@ -35,14 +40,21 @@ class JobController extends Controller
     // Store new job
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), ['title' => 'required|string|max:255', 'description' => 'required|string', 'experience' => 'required|string', 'benefits' => 'nullable|string', 'responsibilities' => 'nullable|string', 'keywords' => 'nullable|string', 'is_featured' => 'required|boolean', 'status' => 'required|in:' . implode(',', JobStatus::cases()), 'working_time' => 'required|in:' . implode(',', WorkingTime::cases()), 'vacancies' => 'required|integer', 'salary' => 'required|numeric', 'company_id' => 'required|exists:companies,id', 'category_id' => 'required|exists:categories,id',]);
+        $validated = $request->validate( [
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'experience' => 'required|string',
+            'benefits' => 'nullable|string',
+            'responsibilities' => 'nullable|string',
+            'keywords' => 'nullable|string',
+            'working_time' => 'required|in:' . implode(',', WorkingTime::getValues()),
+            'vacancies' => 'required|integer',
+            'salary' => 'required|numeric',
+            'company_id' => 'required|exists:companies,id',
+            'category_id' => 'required|exists:categories,id',
+            ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $job = new Job(['title' => $request->title, 'description' => $request->description, 'experience' => $request->experience, 'benefits' => $request->benefits, 'responsibilities' => $request->responsibilities, 'keywords' => $request->keywords, 'is_featured' => $request->is_featured, 'status' => JobStatus::from($request->status), 'working_time' => WorkingTime::from($request->working_time), 'vacancies' => $request->vacancies, 'salary' => $request->salary, 'company_id' => $request->company_id, 'category_id' => $request->category_id,]);
-        $job->save();
+        Job::create($validated);
 
         return redirect()->route('jobs.index')->with('success', 'Job created successfully.');
     }
@@ -92,21 +104,31 @@ class JobController extends Controller
 
     public function edit(Job $job)
     {
-        return view('jobs.edit', compact('job'));
+        $categories = Category::all();
+        $companies = Company::getCompanies();
+        $jobTypes = (WorkingTime::getValues());
+        return view('jobs.edit', compact('job','categories', 'companies', 'jobTypes'));
     }
 
     // Delete a job
 
     public function update(Request $request, Job $job)
     {
-        $validator = Validator::make($request->all(), ['title' => 'required|string|max:255', 'description' => 'required|string', 'experience' => 'required|string', 'benefits' => 'nullable|string', 'responsibilities' => 'nullable|string', 'keywords' => 'nullable|string', 'is_featured' => 'required|boolean', 'status' => 'required|in:' . implode(',', JobStatus::cases()), 'working_time' => 'required|in:' . implode(',', WorkingTime::cases()), 'vacancies' => 'required|integer', 'salary' => 'required|numeric', 'company_id' => 'required|exists:companies,id', 'category_id' => 'required|exists:categories,id',]);
+        $validated = $request->validate( [
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'experience' => 'required|string',
+            'benefits' => 'nullable|string',
+            'responsibilities' => 'nullable|string',
+            'keywords' => 'nullable|string',
+            'working_time' => 'required|in:' . implode(',', WorkingTime::getValues()),
+            'vacancies' => 'required|integer',
+            'salary' => 'required|numeric',
+            'company_id' => 'required|exists:companies,id',
+            'category_id' => 'required|exists:categories,id',
+        ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $job->fill(['title' => $request->title, 'description' => $request->description, 'experience' => $request->experience, 'benefits' => $request->benefits, 'responsibilities' => $request->responsibilities, 'keywords' => $request->keywords, 'is_featured' => $request->is_featured, 'status' => JobStatus::from($request->status), 'working_time' => WorkingTime::from($request->working_time), 'vacancies' => $request->vacancies, 'salary' => $request->salary, 'company_id' => $request->company_id, 'category_id' => $request->category_id,]);
-        $job->save();
+        $job->update($validated);
 
         return redirect()->route('jobs.index')->with('success', 'Job updated successfully.');
     }

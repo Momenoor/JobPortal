@@ -1,4 +1,4 @@
-@extends('layouts.apps')
+@extends('layouts.app')
 
 @section('main')
 
@@ -27,7 +27,7 @@
                                     <h3 class="fs-4 mb-1">Categories</h3>
                                 </div>
                                 <div style="margin-top: -10px;">
-                                    <a href="{{ route('categories.create') }}" class="btn Explore">Add Category</a>
+                                    <a href="{{ route('admin.categories.create') }}" class="btn Explore">Add Category</a>
                                 </div>
                             </div>
                             <div class="table-responsive">
@@ -46,17 +46,23 @@
                                                 <td>
                                                     <div class="job-name fw-500">{{ $category->id }}</div>
                                                 </td>
-                                                <td><div class="job-name fw-500">{{ $category->name }}</div></td>
+                                                <td>
+                                                    <div class="job-name fw-500">{{ $category->name }}</div>
+                                                </td>
                                                 <td>
                                                     <div class="d-flex mt-4">
                                                         <div style="margin-top: -10px;">
-                                                            <a class="btn outline me-2" href="{{ route('categories.edit', $category->id) }}" type="submit">Edit</a>
+                                                            <a class="btn outline me-2"
+                                                               href="{{ route('admin.categories.edit', $category->id) }}"
+                                                               type="submit">Edit</a>
                                                         </div>
-                                                        <form action="{{ route('categories.destroy', $category->id) }}" method="POST">
+                                                        <form action="{{ route('admin.categories.destroy', $category->id) }}"
+                                                              method="POST">
                                                             @csrf
                                                             @method('DELETE')
                                                             <div style="margin-top: -10px;">
-                                                                <button type="submit" class="btn Explore">Delete</button>
+                                                                <button type="submit" class="btn Explore">Delete
+                                                                </button>
                                                             </div>
                                                         </form>
                                                     </div>

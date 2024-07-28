@@ -1,6 +1,6 @@
 @php use App\Enums\JobStatus; @endphp
 @php use Carbon\Carbon; @endphp
-@extends('layouts.apps')
+@extends('layouts.app')
 
 @section('main')
 
@@ -28,9 +28,12 @@
                                 <div>
                                     <h3 class="fs-4 mb-1">Jobs</h3>
                                 </div>
-                                <div style="margin-top: -10px;">
-                                    <a href="{{ route('jobs.create') }}" class="btn Explore">Post a Job</a>
-                                </div>
+                                @if(auth()->user() && (auth()->user()->isAdmin() || auth()->user()->isEmployer()))
+                                    <div style="margin-top: -10px;">
+                                        <a href="{{ route('jobs.create') }}"
+                                           class="btn Explore">Post a Job</a>
+                                    </div>
+                                @endif
                             </div>
                             <div class="table-responsive">
                                 <table class="table">
@@ -81,10 +84,12 @@
                                                     <div class="d-flex mt-4">
                                                         <div style="margin-top: -10px;">
                                                             <a class="btn outline me-2"
-                                                               href="{{ route('jobs.edit', $job->id) }}" type="submit">Edit</a>
+                                                               href="{{ route('jobs.edit', $job->id) }}"
+                                                               type="submit">Edit</a>
                                                         </div>
-                                                        <form action="{{ route('jobs.destroy', $job->id) }}"
-                                                              method="POST">
+                                                        <form
+                                                            action="{{ route('jobs.destroy', $job->id) }}"
+                                                            method="POST">
                                                             @csrf
                                                             @method('DELETE')
                                                             <div style="margin-top: -10px;">

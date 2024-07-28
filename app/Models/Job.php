@@ -4,9 +4,12 @@ namespace App\Models;
 
 use App\Enums\JobStatus;
 use App\Enums\WorkingTime;
+use App\Observers\JobObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy([JobObserver::class])]
 class Job extends Model
 {
     use HasFactory;

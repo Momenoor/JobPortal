@@ -1,4 +1,4 @@
-@extends('layouts.apps')
+@extends('layouts.app')
 @section('main')
     <body>
     <h1>Job Interview Chatbot</h1>
@@ -26,7 +26,7 @@
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': csrfToken,
                     },
-                    body: JSON.stringify({ message: userMessage }),
+                    body: JSON.stringify({message: userMessage}),
                 });
 
                 if (!response.ok) {

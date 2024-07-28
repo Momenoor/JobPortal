@@ -1,5 +1,5 @@
 @php use App\Enums\WorkingTime; @endphp
-@extends('layouts.apps')
+@extends('layouts.app')
 
 
 @section('main')
@@ -35,7 +35,7 @@
                                                     <div class="bg-light p-3 border">
                                                         <p class="mb-0">
                                                             <span class="fw-bolder"><i
-                                                                    class="fa fa-map-marker"></i></span>
+                                                                        class="fa fa-map-marker"></i></span>
                                                             <span class="ps-1">{{ $job->company->address }}</span>
                                                         </p>
                                                         <p class="mb-0">

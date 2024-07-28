@@ -1,4 +1,4 @@
-@extends('layouts.apps')
+@extends('layouts.app')
 
 @section('main')
 
@@ -20,7 +20,7 @@
                 </div>
                 <div class="col-lg-9">
                     @include('account.message')
-                    <form action="{{ route('categories.update',$category) }}" method="post">
+                    <form action="{{ route('admin.categories.update',$category) }}" method="post">
                         @csrf
                         @method('PUT')
                         <div class="card border-0 shadow mb-4 ">
@@ -29,7 +29,9 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-4">
                                         <label for="name" class="mb-2">Category Name<span class="req">*</span></label>
-                                        <input type="text" placeholder="Category Name" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{old('name',$category->name)}}">
+                                        <input type="text" placeholder="Category Name" id="name" name="name"
+                                               class="form-control @error('name') is-invalid @enderror"
+                                               value="{{old('name',$category->name)}}">
                                         @error('name')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror

@@ -19,17 +19,29 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth')->group(function () {
+
+    Route::middleware('role:admin,employer')->group( function () {
+        Route::resource('jobs', JobController::class);
+    });
     // Admin routes
     Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () {
         Route::get('/', function () {
             return view('admin.dashboard');
         });
-
-        Route::resource('categories', CategoryController::class);
-        Route::resource('jobs', JobController::class);
-        Route::resource('applications', JobApplicationController::class);
+        Route::resource('categories', CategoryController::class)->names('admin.categories');
+        Route::resource('applications', JobApplicationController::class)->names('admin.applications');
         Route::get('users', [ProfileController::class, 'index'])->name('admin.users.index');
         Route::patch('jobs/{job}/status', [JobController::class, 'updateStatus'])->name('jobs.updateStatus');
+    });
+
+    // Employer routes
+    Route::group(['prefix' => 'employer', 'middleware' => ['role:employer']], function () {
+        Route::get('/', function () {
+            return view('employer.dashboard');
+        });
+        Route::get('applications', [JobApplicationController::class, 'index'])->name('employer.applications.index');
+        Route::get('applications/{application}', [JobApplicationController::class, 'show'])->name('employer.applications.show');
+        Route::patch('applications/{application}/status', [JobApplicationController::class, 'updateStatus'])->name('employer.applications.updateStatus');
     });
 
     // Seeker routes
@@ -45,17 +57,6 @@ Route::middleware('auth')->group(function () {
         Route::get('applications', [JobApplicationController::class, 'index'])->name('seeker.applications.index');
     });
 
-    // Employer routes
-    Route::group(['prefix' => 'employer', 'middleware' => ['role:employer']], function () {
-        Route::get('/', function () {
-            return view('employer.dashboard');
-        });
-        Route::resource('jobs', JobController::class);
-        Route::get('applications', [JobApplicationController::class, 'index'])->name('employer.applications.index');
-        Route::get('applications/{application}', [JobApplicationController::class, 'show'])->name('employer.applications.show');
-        Route::patch('applications/{application}/status', [JobApplicationController::class, 'updateStatus'])->name('employer.applications.updateStatus');
-        Route::patch('jobs/{job}/status', [JobController::class, 'updateStatus'])->name('jobs.updateStatus');
-    });
 
     Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -76,11 +77,9 @@ Route::get('/', function () {
     return redirect()->route('public.jobs.index');
 })->name('main');
 
-Route::get('/home', function () {
-    return redirect()->route('public.jobs.index');
-})->name('home');
+Route::get('/home', [\App\Http\Controllers\HomeController::class,'index'])->name('home');
 
-Route::get('/jobs', [JobController::class, 'publicIndex'])->name('public.jobs.index');
-Route::post('/jobs', [JobController::class, 'publicSearch'])->name('public.jobs.search');
-Route::get('/jobs/{job}', [JobController::class, 'publicShow'])->name('public.jobs.show');
-
+Route::get('/public/jobs', [JobController::class, 'publicIndex'])->name('public.jobs.index');
+Route::post('/public/jobs', [JobController::class, 'publicSearch'])->name('public.jobs.search');
+Route::get('/public/jobs/search', [JobController::class, 'publicSearch'])->name('public.jobs.search.get');
+Route::get('/public/jobs/{job}', [JobController::class, 'publicShow'])->name('public.jobs.show');

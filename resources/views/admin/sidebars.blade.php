@@ -16,17 +16,23 @@
     <div class="card-body p-0">
         <ul class="list-group list-group-flush ">
             <li class="list-group-item d-flex justify-content-between p-3">
-                <a href="{{ route('admin.users.index') }}">Users</a>
-            </li>
-            <li class="list-group-item d-flex justify-content-between p-3">
                 <a href="{{ route('jobs.index') }}">Jobs</a>
             </li>
-            <li class="list-group-item d-flex justify-content-between p-3">
-                <a href="{{ route('applications.index') }}">Job Applications</a>
-            </li>
-            <li class="list-group-item d-flex justify-content-between p-3">
-                <a href="{{ route('categories.index') }}">Category</a>
-            </li>
+            @if(auth()->user()->isAdmin())
+                <li class="list-group-item d-flex justify-content-between p-3">
+                    <a href="{{ route('admin.users.index') }}">Users</a>
+                </li>
+                <li class="list-group-item d-flex justify-content-between p-3">
+                    <a href="{{ route('admin.applications.index') }}">Job Applications</a>
+                </li>
+                <li class="list-group-item d-flex justify-content-between p-3">
+                    <a href="{{ route('admin.categories.index') }}">Category</a>
+                </li>
+            @elseif(auth()->user()->isEmployer())
+                <li class="list-group-item d-flex justify-content-between p-3">
+                    <a href="{{ route('employer.applications.index') }}">Job Applications</a>
+                </li>
+            @endif
             <li class="list-group-item d-flex justify-content-between p-3">
                 <a href="{{ route('jobs.create') }}">Post Job</a>
             </li>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Company extends Model
 {
@@ -15,5 +16,17 @@ class Company extends Model
     {
         return $this->hasMany(Job::class);
     }
+
+    public static function getCompanies()
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+        if (auth()->user()->isAdmin()) {
+            return self::all();
+        }
+        return Auth::user()->companies;
+    }
+
 }
 

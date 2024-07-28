@@ -1,5 +1,5 @@
 @php use Carbon\Carbon; @endphp
-@extends('layouts.apps')
+@extends('layouts.app')
 
 @section('main')
     <section class="section-4 bg-2">
@@ -93,9 +93,9 @@
                                                 @csrf
                                                 <button type="submit" class="btn btn-success">Save</button>
                                             </form>
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#applyModal"
-                                               class="btn Explore">Apply</a>
                                         @endif
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#applyModal"
+                                           class="btn Explore">Apply</a>
                                     @endif
                                 @else
                                     <a href="javascript:void(0);" class="btn Explore disabled">Login to Apply</a>
@@ -178,7 +178,9 @@
                                     <li>Name: <span>{{ $job->company->name }}</span></li>
                                     <li>Location: <span>{{ $job->company->address }}</span></li>
                                     @if (!empty($job->company->website))
-                                        <li>Website: <span><a href="{{$job->company->website}}">{{ $job->company->website }}</a></span></li>
+                                        <li>Website: <span><a
+                                                    href="{{$job->company->website}}">{{ $job->company->website }}</a></span>
+                                        </li>
                                     @endif
                                 </ul>
                             </div>
