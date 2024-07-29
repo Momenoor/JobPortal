@@ -23,16 +23,12 @@
                     <a href="{{ route('admin.users.index') }}">Users</a>
                 </li>
                 <li class="list-group-item d-flex justify-content-between p-3">
-                    <a href="{{ route('admin.applications.index') }}">Job Applications</a>
-                </li>
-                <li class="list-group-item d-flex justify-content-between p-3">
                     <a href="{{ route('admin.categories.index') }}">Category</a>
                 </li>
-            @elseif(auth()->user()->isEmployer())
-                <li class="list-group-item d-flex justify-content-between p-3">
-                    <a href="{{ route('employer.applications.index') }}">Job Applications</a>
-                </li>
             @endif
+            <li class="list-group-item d-flex justify-content-between p-3">
+                <a href="{{ route('applications.index') }}">Job Applications</a>
+            </li>
             <li class="list-group-item d-flex justify-content-between p-3">
                 <a href="{{ route('jobs.create') }}">Post Job</a>
             </li>

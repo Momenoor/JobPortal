@@ -4,6 +4,7 @@ use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ResumeMatcherController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,9 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('role:admin,employer')->group( function () {
         Route::resource('jobs', JobController::class);
+        Route::patch('applications/{application}/status', [JobApplicationController::class, 'updateStatus'])->name('applications.updateStatus');
+        Route::get('applications', [JobApplicationController::class, 'index'])->name('applications.index');
+        Route::get('applications/{application}', [JobApplicationController::class, 'show'])->name('applications.show');
     });
     // Admin routes
     Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () {
@@ -29,7 +33,7 @@ Route::middleware('auth')->group(function () {
             return view('admin.dashboard');
         });
         Route::resource('categories', CategoryController::class)->names('admin.categories');
-        Route::resource('applications', JobApplicationController::class)->names('admin.applications');
+        Route::resource('applications', JobApplicationController::class)->names('admin.applications')->except(['index', 'show']);
         Route::get('users', [ProfileController::class, 'index'])->name('admin.users.index');
         Route::patch('jobs/{job}/status', [JobController::class, 'updateStatus'])->name('jobs.updateStatus');
     });
@@ -39,9 +43,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', function () {
             return view('employer.dashboard');
         });
-        Route::get('applications', [JobApplicationController::class, 'index'])->name('employer.applications.index');
-        Route::get('applications/{application}', [JobApplicationController::class, 'show'])->name('employer.applications.show');
-        Route::patch('applications/{application}/status', [JobApplicationController::class, 'updateStatus'])->name('employer.applications.updateStatus');
+
     });
 
     // Seeker routes
@@ -64,8 +66,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/chat', function () {
         return view('chatbot.index');
     });
-
     Route::post('/chat', [App\Http\Controllers\ChatbotController::class, 'chat'])->name('chat');
+    Route::get('/matcher', function () {
+        return view('matcher.matcher');
+    });
+
+    Route::post('/matcher', [ResumeMatcherController::class, 'match'])->name('matcher');
 
 });
 
@@ -83,3 +89,4 @@ Route::get('/public/jobs', [JobController::class, 'publicIndex'])->name('public.
 Route::post('/public/jobs', [JobController::class, 'publicSearch'])->name('public.jobs.search');
 Route::get('/public/jobs/search', [JobController::class, 'publicSearch'])->name('public.jobs.search.get');
 Route::get('/public/jobs/{job}', [JobController::class, 'publicShow'])->name('public.jobs.show');
+

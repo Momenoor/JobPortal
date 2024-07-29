@@ -37,6 +37,7 @@
                                         <th scope="col">Mobile</th>
                                         <th scope="col">Status</th>
                                         <th scope="col">Applied Date</th>
+                                        <th scope="col">Matching</th>
 
                                     </tr>
                                     </thead>
@@ -51,7 +52,7 @@
                                                 <td>{{ $application->user->name }}</td>
                                                 <td>{{ $application->user->mobile }}</td>
                                                 <td>
-                                                    <form action="{{route('employer.applications.updateStatus',$application)}}"
+                                                    <form action="{{route('applications.updateStatus',$application)}}"
                                                           method="POST">
                                                         @csrf
                                                         @method('PATCH')
@@ -67,7 +68,14 @@
                                                     </form>
                                                 </td>
                                                 <td>{{ \Carbon\Carbon::parse($application->applied_date)->format('d M, Y') }}</td>
+                                                <td>
+                                                    <form action="{{ route('matcher') }}" method="POST" enctype="multipart/form-data">
+                                                    @csrf
+                                                    <input type="hidden" name="resume" id="resume" value="public/resumes/{{$application->resume}}">
 
+                                                    <button type="submit">Match Resumes</button>
+                                                    </form>
+                                                </td>
                                             </tr>
                                         @endforeach
                                     @endif

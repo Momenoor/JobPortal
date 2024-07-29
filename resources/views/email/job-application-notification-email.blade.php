@@ -39,16 +39,16 @@
 <body>
 <div class="container">
     <div class="header">
-        <h1>Job Submission Approved</h1>
+        <h1>Job Application Submission Approved</h1>
     </div>
     <div class="content">
-        <p>Dear {{$job->company->user->name}},</p>
+        <p>Dear {{$application->user->name}},</p>
         <p>I hope this message finds you well.</p>
-        <p>We are pleased to inform you that your job submission titled <strong>"{{$job->title}}"</strong> has been reviewed and approved.</p>
+        <p>We are pleased to inform you that your job submission titled <strong>"{{$application->job->title}}"</strong> has been reviewed and approved.</p>
         <p><strong>Job Details:</strong></p>
         <ul>
-            <li><strong>Job ID:</strong> [{{$job->id}}]</li>
-            <li><strong>Submission Date:</strong> {{$job->created_at->format('Y-m-d')}}</li>
+            <li><strong>Job ID:</strong> [{{$application->job->id}}]</li>
+            <li><strong>Submission Date:</strong> {{$application->job->created_at->format('Y-m-d')}}</li>
             <li><strong>Approval Date:</strong> {{now()->format('Y-m-d')}}</li>
         </ul>
         <p>Your job is now live and available for further action. Should you have any questions or require further assistance, please do not hesitate to reach out to us at

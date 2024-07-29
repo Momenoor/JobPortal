@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\JobStatus;
+use App\Mail\JobApplicationNotificationEmail;
+use App\Mail\JobNotificationEmail;
 use Illuminate\Http\Request;
 use App\Models\JobApplication;
 use App\Models\Job;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class JobApplicationController extends Controller
@@ -56,11 +59,11 @@ class JobApplicationController extends Controller
     }
     public function updateStatus(Request $request, JobApplication $application)
     {
-        $request->validate(['status' => ['required', 'in:' . implode(',', ApplicationStatus::getValues())],]);
-
+        $request->validate(['status' => ['required', 'in:' . implode(',', ApplicationStatus::getValues())]]);
         $application->status = ApplicationStatus::from($request->input('status'));
+        Mail::to($application->user->email)->send(new JobApplicationNotificationEmail($application));
         $application->save();
 
-        return redirect()->route('employer.applications.index')->with('success', 'Application status updated successfully');
+        return redirect()->route('applications.index')->with('success', 'Application status updated successfully');
     }
 }

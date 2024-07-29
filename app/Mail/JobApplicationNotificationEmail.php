@@ -9,18 +9,18 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class JobNotificationEmail extends Mailable
+class JobApplicationNotificationEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $job;
+    public $application;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($job)
+    public function __construct($application)
     {
-        $this->job = $job;
+        $this->application = $application;
     }
 
     /**
@@ -29,7 +29,7 @@ class JobNotificationEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Job Notification Email',
+            subject: 'Job Application Notification Email',
         );
     }
 
@@ -39,7 +39,7 @@ class JobNotificationEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'email.job-notification-email',
+            view: 'email.job-application-notification-email',
         );
     }
 

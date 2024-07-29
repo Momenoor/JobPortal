@@ -13,7 +13,7 @@ class ChatBotController extends Controller
         $client = new Client();
 
         try {
-            $response = $client->post(route('chat'), [
+            $response = $client->post('http://127.0.0.1:5001/api/chat', [
                 'json' => ['message' => $request->input('message')],
                 'headers' => [
                     'Content-Type' => 'application/json',

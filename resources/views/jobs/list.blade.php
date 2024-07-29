@@ -61,6 +61,7 @@
                                                        href="{{ route('public.jobs.show', $job->id) }}">{{ $job->job_applications_count }}
                                                         Applicants</a></td>
                                                 <td>
+                                                    @if(auth()->user()->isAdmin())
                                                     <form action="{{route('jobs.updateStatus',$job)}}" method="POST">
                                                         @csrf
                                                         @method('PATCH')
@@ -74,6 +75,9 @@
                                                             @endforeach
                                                         </select>
                                                     </form>
+                                                    @else
+                                                        <div class="job-name fw-500">{{ $job->status->value }}</div>
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     <div
