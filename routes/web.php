@@ -71,7 +71,7 @@ Route::middleware('auth')->group(function () {
         return view('matcher.matcher');
     });
 
-    Route::post('/matcher', [ResumeMatcherController::class, 'match'])->name('matcher');
+    Route::post('/matcher/{job}', [ResumeMatcherController::class, 'match'])->name('matcher');
 
 });
 

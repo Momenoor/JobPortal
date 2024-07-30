@@ -45,6 +45,7 @@
                                         <th scope="col">Status</th>
                                         <th scope="col">Created At</th>
                                         <th scope="col">Tools</th>
+                                        <th scope="col">Matching</th>
                                     </tr>
                                     </thead>
                                     <tbody class="border-0">
@@ -103,7 +104,12 @@
                                                         </form>
                                                     </div>
                                                 </td>
-
+                                                <td>
+                                                    <form action="{{ route('matcher',$job) }}" method="POST">
+                                                        @csrf
+                                                        <button type="submit">Match Resumes</button>
+                                                    </form>
+                                                </td>
                                             </tr>
                                         @endforeach
                                     @endif

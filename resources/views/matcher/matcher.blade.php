@@ -20,14 +20,15 @@
                                 <h3 class="fs-4 mb-1">Matching Report</h3>
                             </div>
                             <div style="margin-top: -10px;">
-                                <a href="{{route('applications.index')}}">Go Back</a>
+                                <a class="btn btn-primary" href="{{route('jobs.index')}}">Go Back</a>
                             </div>
                         </div>
 
                         <p>{{ session('message') }}</p>
+
                         <ul>
                             @foreach (session('top_resumes') as $index => $resume)
-                                <li><a target="_blank" href="{{url('resumes/'.$resume)}}">{{ $resume }}</a> - {{ session('similarity_scores')[$index] }}</li>
+                                <li><a target="_blank" href="{{url('resumes/'.$resume)}}">{{ $resume }}</a> -Matching  Result: {{ session('similarity_scores')[$index] }}</li>
                             @endforeach
                         </ul>
                     <div>

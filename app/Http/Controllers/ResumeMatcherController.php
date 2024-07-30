@@ -2,25 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Job;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class ResumeMatcherController extends Controller
 {
-    public function match(Request $request)
+    public function match(Request $request,Job $job)
     {
-        $request->validate([
-            'resume' => 'required',
-        ]);
 
-        $resumes = $request->input('resume');
-
-        $response = Http::attach(
-            'resume_file_path', $resumes
-        );
+        $data = [
+            'job_description'=> $job->description,
+            'resumes' => $job->jobApplications->pluck('resume')->toArray(),
+        ];
+        //$response = Http::attach($data);
 
 
-        $response = $response->post('http://127.0.0.1:5002/api/matcher');
+        $response = Http::post('http://127.0.0.1:5002/api/matcher',$data);
         if ($response->successful()) {
             return redirect('/matcher')->with([
                 'message' => $response->json()['message'],

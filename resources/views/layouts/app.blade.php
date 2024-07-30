@@ -39,6 +39,9 @@
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="{{ route('public.jobs.index') }}">Find Jobs</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{{ route('chat') }}">Chatbot</a>
+                    </li>
                 </ul>
                 @guest
                     @if (Route::has('login'))
